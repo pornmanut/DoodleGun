@@ -8,9 +8,9 @@ class Window(arcade.Window):
         super().__init__(width,height)
         arcade.set_background_color(arcade.color.RICH_BRILLIANT_LAVENDER)
 
-    def on_key_press(self,key,key_modifiers):
+    #def on_key_press(self,key,key_modifiers):
 
-    def update(self,delta):
+    #def update(self,delta):
 
 
     def on_draw(self):
