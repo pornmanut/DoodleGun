@@ -1,6 +1,6 @@
 import arcade
-import player
-import world
+import draw
+from world import World
 
 #Window setting
 SCREEN_WIDTH = 600
@@ -13,12 +13,18 @@ class Window(arcade.Window):
 
     def __init__(self,width,height):
         super().__init__(width,height,WINDOWS_TITLE)
-
+        arcade.set_background_color(BACKGROUND_COLOR)
+        self.world = World(width,height)
+        self.player_sprite = draw.Draw_Circle(self.world.player)
 
 
     def on_draw(self):
         arcade.start_render()
-        arcade.set_background_color(BACKGROUND_COLOR)
+        self.player_sprite.draw()
+
+
+    def update(self,delta):
+        self.world.update(delta)
 
 
 
