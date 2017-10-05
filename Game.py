@@ -5,17 +5,14 @@ import arcade
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 600
 BACKGROUND_COLOR = arcade.color.AZURE
+WINDOWS_TITLE = 'Game.py'
 
 
-
-class Window:
+class Window(arcade.Window):
 
     def __init__(self,width,height):
+        super().__init__(width,height,WINDOWS_TITLE)
 
-        self.width = width
-        self.height = height
-        self.title = "game"
-        super().__init__(self.width,self.height,self.title)
 
 
     def on_draw(self):
