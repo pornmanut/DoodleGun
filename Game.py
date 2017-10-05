@@ -1,5 +1,6 @@
 import arcade
-
+import player
+import world
 
 #Window setting
 SCREEN_WIDTH = 600
