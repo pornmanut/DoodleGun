@@ -14,6 +14,19 @@ class Base:
         self.color = COLOR
         self.angle = 0
 
+        self.isMoving = False
+        self.moving = 0
+    def out_of_edge(self):
+        if(self.y < y+self.height//2):
+            return True
+        return False
+    def update(self,delta):
+        if(self.isMoving):
+            self.y += self.moving
+            self.moving = 0
+            self.isMoving = False
+
+
 class Normal(Base):
     def __init__(self,x,y):
         super().__init__(x,y,WIDTH,HEIGHT)
