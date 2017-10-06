@@ -4,7 +4,7 @@ from world import World
 
 #Window setting
 SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 1000
+SCREEN_HEIGHT = 600
 BACKGROUND_COLOR = arcade.color.AZURE
 WINDOWS_TITLE = 'Game.py'
 
