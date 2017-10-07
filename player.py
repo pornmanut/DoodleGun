@@ -20,6 +20,9 @@ class Player:
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.jump_speed = JUMP_SPEED
+        self.isKeyRight = False
+        self.isKeyLeft = False
+
     def out_of_edge(self):
         if(self.x < self.size/2):
             self.x = self.screen_width-self.size/2
@@ -28,9 +31,24 @@ class Player:
 
     def on_key_press(self,key,modifier):
         if(key == arcade.key.LEFT):
-            self.delta_x = -MOVEMENT_SPEED
+            self.isKeyLeft = True
         elif(key == arcade.key.RIGHT):
+            self.isKeyRight = True
+
+    def on_key_release(self,key,modifier):
+        if(key == arcade.key.LEFT and self.isKeyLeft):
+            self.isKeyLeft = False
+        elif(key == arcade.key.RIGHT and self.isKeyRight):
+            self.isKeyRight = False
+
+
+    def movement(self):
+        if(self.isKeyLeft):
+            self.delta_x = -MOVEMENT_SPEED
+        elif(self.isKeyRight):
             self.delta_x = MOVEMENT_SPEED
+        else:
+            self.fiction()
 
     def fiction(self):
         if(self.delta_x > FICTION):
@@ -46,7 +64,7 @@ class Player:
     def update(self,delta):
 
         self.delta_y += -GRAVITY
-
+        self.movement()
         self.x += self.delta_x
         self.y += self.delta_y
 

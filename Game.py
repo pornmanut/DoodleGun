@@ -22,6 +22,7 @@ class Window(arcade.Window):
 
     def on_draw(self):
         arcade.start_render()
+        arcade.draw_text('SCORE:{}'.format(World.SCORE),300,500,arcade.color.BLACK,12)
         self.player_sprite.draw()
         for item in self.list_of_all_sprite:
             item.draw()
@@ -30,8 +31,12 @@ class Window(arcade.Window):
     def on_key_press(self,key,modifier):
         self.world.on_key_press(key,modifier)
 
+    def on_key_release(self,key,modifier):
+        self.world.on_key_release(key,modifier)
+
     def update(self,delta):
         self.world.update(delta)
+
         if(self.world.list_update):
             index = self.world.list_update_move
             for i in range(self.world.list_update_move):
