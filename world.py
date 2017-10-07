@@ -2,26 +2,41 @@ from player import Player
 from random import randint
 import platfrom
 
-class Create:
-    @staticmethod
-    def random_platfrom(x1,y1,x2,y2,amount):
-        product = []
-        for index in range(amount):
-            x = randint(x1,x2)
-            y = randint(y1,y2)
-            product.append(platfrom.Normal(x,y))
-        return product
 
+class Create:
+    Edge = 10
+    @classmethod
+    def random_platfrom(cls,x1,y1,x2,y2):
+        x = randint(x1+cls.Edge,x2-cls.Edge)
+        y = randint(y1+cls.Edge,y2-cls.Edge)
+        return platfrom.Normal(x,y)
+    @staticmethod
+    def sector_platfrom(width,height,sector,list_of_platfrom):
+        start = 0
+        for i in range(sector):
+            list_of_platfrom.append(Create.random_platfrom(0,start,width,start+height//sector))
+            start += height//sector
+        return list_of_platfrom
+    @staticmethod
+    def add_platfrom(width,height,sector,amount,list_of_platfrom):
+        start_height = int(height*((sector-amount)/sector))
+        for i in range(amount):
+            list_of_platfrom.append(Create.random_platfrom(0,start_height,width,start_height+height//sector))
+            start_height += height//sector
+        return list_of_platfrom
 class World:
 
     def __init__(self,width,height):
         self.width = width
         self.height = height
-        self.player = Player(100,100,self.width,self.height)
-
+        self.sector = 9
         self.list_of_platfrom = []
-        self.list_of_platfrom = Create.random_platfrom(0,0,width,height,10)
-
+        self.list_of_platfrom = Create.sector_platfrom(self.width,self.height,self.sector,self.list_of_platfrom)
+        self.player = Player(self.list_of_platfrom[0].x,self.list_of_platfrom[0].y+50
+                                ,self.width,self.height)
+        self.list_update = False
+        self.list_update_move = 0
+        print(self.list_of_platfrom)
     def on_key_press(self,key,modifier):
         self.player.on_key_press(key,modifier)
 
@@ -38,17 +53,24 @@ class World:
     def update(self,delta):
         create = False
         self.player.update(delta)
-        for item in self.list_of_platfrom:
+        for index,item in enumerate(self.list_of_platfrom):
             item.update(delta)
-
             if(self.is_player_collisions(self.player,item)):
-                for item2 in self.list_of_platfrom:
-                    if(not item2.isMoving):
-                        item2.isMoving = True
-                        if(self.player.y > 100):
-                            item2.moving = 100-int(self.player.y)
-                            create = True
+                print('index: {}'.format(index))
                 self.player.jump()
-        #if(create):
-            #self.list_of_platfrom.append(Create.random_platfrom(self.width//2,self.height//2,self.width,self.height,1))
-        
+                if(index != 0):
+                    self.list_update_move = index
+                    for pf in self.list_of_platfrom:
+                        pf.isMove = True
+                        pf.move = index
+                    #pop
+
+                    for i in range(index):
+                        del self.list_of_platfrom[0]
+
+                    self.list_update = True
+
+                    self.list_of_platfrom = Create.add_platfrom(self.width,self.height,self.sector,index,self.list_of_platfrom)
+                    print(self.list_of_platfrom)
+                    print(self.list_of_platfrom[0])
+                    self.player.y = self.list_of_platfrom[0].y+self.list_of_platfrom[0].height+self.player.size-(index*self.height//9)

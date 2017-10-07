@@ -4,7 +4,7 @@ from world import World
 
 #Window setting
 SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 600
+SCREEN_HEIGHT = 1000
 BACKGROUND_COLOR = arcade.color.AZURE
 WINDOWS_TITLE = 'Game.py'
 
@@ -32,7 +32,12 @@ class Window(arcade.Window):
 
     def update(self,delta):
         self.world.update(delta)
-
+        if(self.world.list_update):
+            index = self.world.list_update_move
+            for i in range(self.world.list_update_move):
+                del self.list_of_all_sprite[0]
+                self.list_of_all_sprite.append(draw.Draw_Rectangle(self.world.list_of_platfrom[-index+i]))
+            self.world.list_update = False
 
 
 def main():

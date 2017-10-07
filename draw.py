@@ -1,5 +1,4 @@
 import arcade
-
 class Draw_Circle:
     def __init__(self,model):
         self.model = model
