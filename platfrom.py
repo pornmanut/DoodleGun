@@ -1,8 +1,10 @@
 from arcade import color
 
 
-COLOR = color.AERO_BLUE
+COLOR = color.WHITE_SMOKE
 MOVE_SPEED = 10
+WIDTH = 80
+HEIGHT = 6
 
 
 class Base:
@@ -32,7 +34,7 @@ class Base:
         #when move how y is decresed
         self.move_target = 0
         #move with speed
-        self.move_speed = 10
+        self.move_speed = MOVE_SPEED
         #tempolary move
         self.move_temp = self.move
 
@@ -44,10 +46,8 @@ class Base:
 
     def set_target(self):
         if(self.move > 0):
-            print(Base.Screen_Height,Base.Sector)
             self.move_target = self.move*((2*Base.Screen_Height)//Base.Sector)
             self.move_temp = self.move
-            print(self.move_temp,self.move_target)
             self.move = 0
 
     def movement(self):
@@ -67,7 +67,7 @@ class Base:
                 self.move_temp = 0
 
 
-    def update(self,delta):
+    def update(self):
         #Trigger from world
         self.set_target()
         self.movement()
@@ -75,7 +75,7 @@ class Base:
 
 class Normal(Base):
     def __init__(self,x,y):
-        super().__init__(x,y,100,10)
+        super().__init__(x,y,WIDTH,HEIGHT)
 
     def __repr__(self):
         return 'Normal({:.2f},{:.2f})'.format(self.x,self.y)

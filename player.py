@@ -1,13 +1,13 @@
 from arcade import color
 import arcade.key
 
-MOVEMENT_SPEED = 4.5
-CIRCLE_RADIUS = 20
+MOVEMENT_SPEED = 5
+CIRCLE_RADIUS = 12
 CIRCLE_COLOR = color.ALICE_BLUE
-JUMP_SPEED = 12
+JUMP_SPEED = 10
 
 GRAVITY = 0.3
-FICTION = 0.05
+FICTION = 0.1
 
 class Player:
 
@@ -34,6 +34,16 @@ class Player:
     def __repr__(self):
         #show [x,y]->[delta_x,delta_y]
         return "[{:.2f},{:.2f}]->[{:.2f},{:.2f}]".format(self.x,self.y,self.delta_x,self.delta_y)
+
+    def is_collisions(self,other):
+        if(self.delta_y <0 and
+            self.y-self.size <= other.y+other.height//2+self.size//2 and
+            self.y-self.size >= other.y-other.height//2-self.size//2 and
+            self.x-self.size <= other.x+other.width//2 and
+            self.x+self.size >= other.x-other.width//2   ):
+            return True
+        else:
+            return False
 
     def out_of_edge(self):
         #x
@@ -76,13 +86,16 @@ class Player:
                 self.delta_x = 0
 
 
-    def jump(self):
-        self.delta_y = JUMP_SPEED
+    def jump(self,amount=0):
+        mutiply = 1
+        for i in range(amount):
+            mutiply *= 2/3
+        self.delta_y = JUMP_SPEED*mutiply
 
     def gravity(self):
         self.delta_y += -GRAVITY
 
-    def update(self,delta):
+    def update(self):
 
         self.gravity()
         self.movement()

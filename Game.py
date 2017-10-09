@@ -2,30 +2,29 @@ import arcade
 import draw
 from world import World
 
-#Window setting
-SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 1000
+SCREEN_WIDTH = 500
+SCREEN_HEIGHT = 700
 BACKGROUND_COLOR = arcade.color.AZURE
 WINDOWS_TITLE = 'Game.py'
-
+EDGE_WIDTH = SCREEN_WIDTH//20
+EDGE_HEIGHT = SCREEN_HEIGHT//20
 
 class Window(arcade.Window):
 
     def __init__(self,width,height):
         super().__init__(width,height,WINDOWS_TITLE)
         arcade.set_background_color(BACKGROUND_COLOR)
+
         self.world = World(width,height)
         self.player_sprite = draw.Draw_Circle(self.world.player)
-        self.list_of_all_sprite = []
-        for item in self.world.list_of_platfrom:
-            self.list_of_all_sprite.append(draw.Draw_Rectangle(item))
 
     def on_draw(self):
         arcade.start_render()
-        arcade.draw_text('SCORE:{}'.format(World.SCORE),300,500,arcade.color.BLACK,12)
+        arcade.draw_text('SCORE:{}'.format(World.SCORE),EDGE_WIDTH,EDGE_HEIGHT,arcade.color.WHITE,12)
+
         self.player_sprite.draw()
-        for item in self.list_of_all_sprite:
-            item.draw()
+        for pf in self.world.list_of_platfrom:
+            draw.Draw_Rectangle(pf).draw()
 
 
     def on_key_press(self,key,modifier):
@@ -37,19 +36,10 @@ class Window(arcade.Window):
     def update(self,delta):
         self.world.update(delta)
 
-        if(self.world.list_update):
-            index = self.world.list_update_move
-            for i in range(self.world.list_update_move):
-                del self.list_of_all_sprite[0]
-                self.list_of_all_sprite.append(draw.Draw_Rectangle(self.world.list_of_platfrom[-index+i]))
-            self.world.list_update = False
-
 
 def main():
     game = Window(SCREEN_WIDTH,SCREEN_HEIGHT)
-    #run
     arcade.run()
 
 if __name__ == '__main__':
     main()
-    #def update(self,delta):
