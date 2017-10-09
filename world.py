@@ -69,6 +69,7 @@ class World:
 
     def update(self,delta):
         create = False
+        #print(self.player)
         self.player.update(delta)
         for index,item in enumerate(self.list_of_platfrom):
 
