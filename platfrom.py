@@ -1,50 +1,81 @@
-import arcade
 from arcade import color
-import draw
+
 
 COLOR = color.AERO_BLUE
 MOVE_SPEED = 10
 
-SCREEN_HEIGHT = 1000
-SECTOR = 18
 
 class Base:
 
+    #seting with setup
+    Screen_Height = 0
+    Screen_Width = 0
+    Sector = 1
+
+    @classmethod
+    def Setup(cls,screen_width,screen_height,Sector):
+        cls.Screen_Width = screen_width
+        cls.Screen_Height = screen_height
+        cls.Sector = Sector
+
     def __init__(self,x,y,width,height):
+
         self.x = x
         self.y = y
+        #width,height of platfrom
         self.width = width
         self.height = height
         self.color = COLOR
         self.angle = 0
+        #player pass how many platfrom
         self.move = 0
+        #when move how y is decresed
         self.move_target = 0
+        #move with speed
         self.move_speed = 10
+        #tempolary move
         self.move_temp = self.move
+
     def __repr__(self):
-        return '[{},{}]'.format(self.x,self.y)
+        #Base(x,y)
+        return 'Base({:.2f},{:.2f})'.format(self.x,self.y)
 
-    def movement(self):
 
+
+    def set_target(self):
         if(self.move > 0):
-            self.move_target = self.move*((2*SCREEN_HEIGHT)//SECTOR)
+            print(Base.Screen_Height,Base.Sector)
+            self.move_target = self.move*((2*Base.Screen_Height)//Base.Sector)
             self.move_temp = self.move
+            print(self.move_temp,self.move_target)
             self.move = 0
 
-        if(self.move_target-self.move_temp*self.move_speed >= 0):
-            self.y -= self.move_temp*self.move_speed
-            self.move_target -= self.move_temp*self.move_speed
-        elif(self.move_target-self.move_temp*self.move_speed < 0):
-            self.y -= self.move_target
-            self.move_target = 0
-        else:
-            self.move_target = 0
+    def movement(self):
+        if(self.move_temp > 0):
+            if(self.move_target-self.move_temp*self.move_speed >= 0):
+                #- move speed
+                self.y -= self.move_temp*self.move_speed
+                # remain move_target and continum
+                self.move_target -= self.move_temp*self.move_speed
+            elif(self.move_target-self.move_temp*self.move_speed < 0):
+                #- move target remain
+                self.y -= self.move_target
+                # set move to zero no more move
+                self.move_temp = 0
+            else:
+                #set nove_target to zero no more move
+                self.move_temp = 0
 
 
     def update(self,delta):
+        #Trigger from world
+        self.set_target()
         self.movement()
 
 
 class Normal(Base):
     def __init__(self,x,y):
         super().__init__(x,y,100,10)
+
+    def __repr__(self):
+        return 'Normal({:.2f},{:.2f})'.format(self.x,self.y)

@@ -42,7 +42,8 @@ class World:
     def __init__(self,width,height):
         self.width = width
         self.height = height
-        self.sector = 18
+        self.sector = ((height*2)//100)-(height*2)//1000
+        self.setup()
         self.list_of_platfrom = []
         self.list_of_platfrom = Create.sector_platfrom(self.width,self.height,self.sector,self.list_of_platfrom)
         self.player = Player(self.list_of_platfrom[0].x,self.list_of_platfrom[0].y+50
@@ -50,6 +51,14 @@ class World:
         self.list_update = False
         self.list_update_move = 0
         #print(self.list_of_platfrom)
+
+
+    def __repr__(self):
+        return '{}x{} sector:{}'.format(self.width,self.height,self.sector)
+
+    def setup(self):
+        platfrom.Base.Setup(self.width,self.height,self.sector)
+
 
     def on_key_press(self,key,modifier):
         self.player.on_key_press(key,modifier)
@@ -80,7 +89,7 @@ class World:
                 print('index: {}'.format(index))
                 self.player.jump()
                 self.player.delta_y -= 3*index
-
+                print(self)
                 if(index != 0):
                     self.player.move = index
                     World.SCORE += index

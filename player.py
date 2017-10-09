@@ -42,9 +42,8 @@ class Player:
         elif(self.x > self.screen_width-self.size//2):
             self.x = self.size//2
 
-        #y
-        # if(self.y < 0 and self.delta_y < 0):
-        #     self.jump()
+        if(self.y < 0 and self.delta_y < 0):
+            self.jump()
 
     def on_key_press(self,key,modifier):
         if(key == arcade.key.LEFT):
