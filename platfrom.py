@@ -2,7 +2,7 @@ from arcade import color
 
 
 COLOR = color.WHITE_SMOKE
-MOVE_SPEED = 10
+MOVE_SPEED = 5
 WIDTH = 80
 HEIGHT = 6
 
