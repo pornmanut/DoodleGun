@@ -2,7 +2,6 @@ from arcade import color
 
 
 COLOR = color.WHITE_SMOKE
-MOVE_SPEED = 5
 WIDTH = 80
 HEIGHT = 6
 
@@ -13,12 +12,15 @@ class Base:
     Screen_Height = 0
     Screen_Width = 0
     Sector = 1
+    Sector_Width = 0
+    MOVE_SPEED = 7
 
     @classmethod
-    def Setup(cls,screen_width,screen_height,Sector):
+    def Setup(cls,screen_width,screen_height,sector):
         cls.Screen_Width = screen_width
         cls.Screen_Height = screen_height
-        cls.Sector = Sector
+        cls.Sector = sector
+        cls.Sector_Width = 2*screen_height//sector
 
     def __init__(self,x,y,width=None,height=None):
 
@@ -29,40 +31,26 @@ class Base:
         self.height = height
         self.color = COLOR
         self.angle = 0
-        #player pass how many platfrom
-        self.move = 0
         #when move how y is decresed
+        self.move = 0
         self.move_target = 0
-        #move with speed
-        self.move_speed = MOVE_SPEED
-        #tempolary move
-        self.move_temp = self.move
-
     def __repr__(self):
         #Base(x,y)
         return 'Base({:.2f},{:.2f})'.format(self.x,self.y)
 
-    def set_target(self):
-        if(self.move > 0):
-            self.move_target = self.move*((2*Base.Screen_Height)//Base.Sector)
-            self.move_temp = self.move
-            self.move = 0
+    def set_movement(self,move):
+        self.move = move
+        self.move_target = move*Base.Sector_Width
 
     def movement(self):
-        if(self.move_temp > 0):
-            if(self.move_target-self.move_temp*self.move_speed >= 0):
-                #- move speed
-                self.y -= self.move_temp*self.move_speed
-                # remain move_target and continum
-                self.move_target -= self.move_temp*self.move_speed
-            elif(self.move_target-self.move_temp*self.move_speed < 0):
-                #- move target remain
-                self.y -= self.move_target
-                # set move to zero no more move
-                self.move_temp = 0
+        if(self.move > 0):
+            if(self.move_target-Base.MOVE_SPEED >= 0):
+                self.y -= Base.MOVE_SPEED
+                self.move_target -= Base.MOVE_SPEED
             else:
-                #set nove_target to zero no more move
-                self.move_temp = 0
+                self.y -= self.move_target
+                self.move_target = 0
+                self.move = 0
 
     def is_out_of_edge(self):
         if(self.y < 0):
@@ -71,7 +59,6 @@ class Base:
 
     def update(self):
         #Trigger from world
-        self.set_target()
         self.movement()
 
 

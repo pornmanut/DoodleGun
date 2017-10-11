@@ -89,7 +89,7 @@ class Player:
     def jump(self,amount=0):
         mutiply = 1
         for i in range(amount):
-            mutiply *= 2/3
+            mutiply *= 4/5
         self.delta_y = JUMP_SPEED*mutiply
 
     def gravity(self):

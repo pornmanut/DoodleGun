@@ -20,7 +20,9 @@ class Window(arcade.Window):
 
     def on_draw(self):
         arcade.start_render()
-        arcade.draw_text('SCORE:{}'.format(World.SCORE),EDGE_WIDTH,EDGE_HEIGHT,arcade.color.WHITE,12)
+        arcade.draw_text('Score:{}'.format(self.world.SCORE),EDGE_WIDTH,EDGE_HEIGHT,arcade.color.WHITE,12)
+        arcade.draw_text('Money:{}'.format(self.world.MONEY),EDGE_WIDTH,EDGE_HEIGHT*2,arcade.color.WHITE,12)
+        arcade.draw_text('Time:{:.0f}'.format(self.world.time),EDGE_WIDTH,EDGE_HEIGHT*3,arcade.color.WHITE,12)
 
         self.player_sprite.draw()
         for pf in self.world.list_of_platfrom:

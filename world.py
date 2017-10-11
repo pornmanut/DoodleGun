@@ -116,8 +116,8 @@ class World:
                 if(index != 0):
                     print("[{:.2f}]----->Score +{}".format(self.time,index))
                     for pf in self.list_of_platfrom:
-                        pf.move = index
+                        pf.set_movement(index)
                     for c in self.list_of_coin:
-                        c.move = index
+                        c.set_movement(index)
                     Create.platfrom_system(self.width,self.height,self.sector,index,self.list_of_platfrom,True,self.list_of_coin,20)
                     World.add_score(index)
