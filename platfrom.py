@@ -63,11 +63,14 @@ class Base:
 
 
 class Normal(Base):
-    def __init__(self,x,y):
+    def __init__(self,x,y,color):
         super().__init__(x,y,WIDTH,HEIGHT)
-
+        self.color = color
     def __repr__(self):
-        return 'Normal({:.2f},{:.2f})'.format(self.x,self.y)
+        return 'Normal({:.2f},{:.2f}) RGB: {}'.format(self.x,self.y,self.color)
+
+    def update(self,delta):
+        super().update()
 
 class Coin(Base):
     def __init__(self,x,y,size=8,coin=5):

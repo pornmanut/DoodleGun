@@ -27,6 +27,7 @@ class Player:
         self.screen_height = screen_height
         #jump
         self.jump_speed = JUMP_SPEED
+        self.mutiply_speed = 4/7
         #is preseed key right or ledt
         self.isKeyRight = False
         self.isKeyLeft = False
@@ -35,9 +36,10 @@ class Player:
         #show [x,y]->[delta_x,delta_y]
         return "[{:.2f},{:.2f}]->[{:.2f},{:.2f}]".format(self.x,self.y,self.delta_x,self.delta_y)
 
-    def is_collisions(self,other):
-        if(self.delta_y <0 and
-            self.y-self.size <= other.y+other.height//2+self.size//2 and
+    def is_collisions(self,other,check_y=True):
+        if(check_y and self.delta_y > 0):
+            return False
+        if( self.y-self.size <= other.y+other.height//2+self.size//2 and
             self.y-self.size >= other.y-other.height//2-self.size//2 and
             self.x-self.size <= other.x+other.width//2 and
             self.x+self.size >= other.x-other.width//2   ):
@@ -89,7 +91,7 @@ class Player:
     def jump(self,amount=0):
         mutiply = 1
         for i in range(amount):
-            mutiply *= 4/5
+            mutiply *= self.mutiply_speed
         self.delta_y = JUMP_SPEED*mutiply
 
     def gravity(self):
