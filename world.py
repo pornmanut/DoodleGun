@@ -7,10 +7,19 @@ import platfrom
 
 class Create:
     Edge_x = 20
-    Edge_y = 30
+    Edge_y = 35
     Coin_Y_Offset = 20
     Color_List = [color.REDWOOD,color.FOREST_GREEN,color.FLAX,
                     color.WHITE_SMOKE,color.ALMOND,color.RUBY]
+    Move_Speed_List = [2,1.5,1,0.5,-0.5,-1,-1.5,-2]
+
+    @staticmethod
+    def random_spawn(drop_rate):
+        random = randint(0,100)
+        if(random < drop_rate):
+            return True
+        return False
+
     @classmethod
     def random_platfrom(cls,x1,y1,x2,y2):
         x = randint(x1+cls.Edge_x,x2-cls.Edge_x)
@@ -19,9 +28,16 @@ class Create:
         return platfrom.Normal(x,y,color)
 
     @classmethod
+    def random_movable_platfrom(cls,x1,y1,x2,y2):
+        x = randint(x1+2*cls.Edge_x,x2-2*cls.Edge_x)
+        y = randint(y1+cls.Edge_y,y2-cls.Edge_y)
+        color = choice(cls.Color_List)
+        move_speed = choice(cls.Move_Speed_List)
+        return platfrom.Normal_Moveable(x,y,color,move_speed)
+
+    @classmethod
     def random_coin(cls,x,y,drop_rate,list_of_coin):
-        random = randint(0,100)
-        if(random<drop_rate):
+        if(cls.random_spawn(drop_rate)):
             list_of_coin.append(platfrom.Coin(x,y+cls.Coin_Y_Offset))
 
     @staticmethod
@@ -35,22 +51,27 @@ class Create:
                     Create.random_coin(list_of_platfrom[i].x,list_of_platfrom[i].y,drop_rate,list_of_coin)
 
 
-    @staticmethod
-    def platfrom_system(width,height,sector,amount,list_of_platfrom,coin=False,list_of_coin=None,drop_rate=10):
+    @classmethod
+    def platfrom_system(cls,width,height,sector,amount,list_of_platfrom,coin=False,list_of_coin=None,drop_rate=10):
         start_height = int((2*height)*((sector-amount)/sector))
         for i in range(amount):
-            
-            list_of_platfrom.append(Create.random_platfrom(0,start_height,width,start_height+(2*height)//sector))
+            if(cls.random_spawn(drop_rate)):
+                list_of_platfrom.append(Create.random_movable_platfrom(0,start_height,width,start_height+(2*height)//sector))
+            else:
+                list_of_platfrom.append(Create.random_platfrom(0,start_height,width,start_height+(2*height)//sector))
+                if(coin):
+                    if(list_of_coin != None):
+                        Create.random_coin(list_of_platfrom[-1].x,list_of_platfrom[-1].y,drop_rate,list_of_coin)
             start_height += (2*height)//sector
-            if(coin):
-                if(list_of_coin != None):
-                    Create.random_coin(list_of_platfrom[-1].x,list_of_platfrom[-1].y,drop_rate,list_of_coin)
-
 
 class World:
 
     SCORE = 0
+    SCORE_TEMP = SCORE
     MONEY = 0
+    Drop_Rate = 10
+    MAX_DROP_RATE = 80
+    Drop_Rate_Change = 50
 
     def __init__(self,width,height):
         #setup
@@ -62,12 +83,21 @@ class World:
         self.time_status = 0
         self.list_of_platfrom = []
         self.list_of_coin = []
-        Create.generation_platfrom(self.width,self.height,self.sector,self.list_of_platfrom,True,self.list_of_coin,20)
+        Create.generation_platfrom(self.width,self.height,self.sector,self.list_of_platfrom,True,self.list_of_coin,World.Drop_Rate)
         self.player = Player(self.list_of_platfrom[0].x,self.list_of_platfrom[0].y+50,self.width,self.height)
 
 
     def __repr__(self):
         return '{}x{} sector:{}'.format(self.width,self.height,self.sector)
+
+    @classmethod
+    def add_drop_rate(cls):
+        if(cls.SCORE > cls.SCORE_TEMP+cls.Drop_Rate_Change and cls.Drop_Rate < cls.MAX_DROP_RATE):
+            cls.Drop_Rate += 5
+            cls.SCORE_TEMP = cls.SCORE
+            return True
+        return False
+
 
     def setup(self):
         platfrom.Base.Setup(self.width,self.height,self.sector)
@@ -87,6 +117,9 @@ class World:
         cls.MONEY += amount
 
     def update(self,delta):
+
+        if(World.add_drop_rate()):
+            print("[{:.2f}]----->Change:Drop_Rate {}".format(self.time,World.Drop_Rate))
 
         self.time_status += delta
         self.time += delta
@@ -137,5 +170,5 @@ class World:
                     for c in self.list_of_coin:
                         c.set_movement(index)
 
-                    Create.platfrom_system(self.width,self.height,self.sector,index,self.list_of_platfrom,True,self.list_of_coin,20)
+                    Create.platfrom_system(self.width,self.height,self.sector,index,self.list_of_platfrom,True,self.list_of_coin,World.Drop_Rate)
                     World.add_score(index)

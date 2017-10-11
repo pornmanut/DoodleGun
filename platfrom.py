@@ -1,8 +1,7 @@
 from arcade import color
 
-
 COLOR = color.WHITE_SMOKE
-WIDTH = 80
+WIDTH = 90
 HEIGHT = 6
 
 
@@ -71,6 +70,30 @@ class Normal(Base):
 
     def update(self,delta):
         super().update()
+
+class Normal_Moveable(Normal):
+
+    def __init__(self,x,y,color,move_speed):
+        super().__init__(x,y,color)
+        self.move_speed = move_speed
+        self.time = 0
+        self.time_change = 1
+
+    def __repr__(self):
+        return 'Moving({:.2f},{:.2f}) RGB:{} Speed: {}'.format(self.x,self.y,
+                self.color,self.move_speed)
+
+    def sign_move(self):
+        if(self.time > self.time_change):
+            self.move_speed *= -1
+            self.time = 0
+        self.x += self.move_speed
+
+    def update(self,delta):
+        super().update(delta)
+        self.time += delta
+        self.sign_move()
+
 
 class Coin(Base):
     def __init__(self,x,y,size=8,coin=5):

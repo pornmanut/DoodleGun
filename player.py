@@ -27,7 +27,7 @@ class Player:
         self.screen_height = screen_height
         #jump
         self.jump_speed = JUMP_SPEED
-        self.mutiply_speed = 4/7
+        self.mutiply_speed = 3/7
         #is preseed key right or ledt
         self.isKeyRight = False
         self.isKeyLeft = False
