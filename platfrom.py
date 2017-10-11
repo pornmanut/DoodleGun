@@ -83,8 +83,9 @@ class Normal(Base):
         return 'Normal({:.2f},{:.2f})'.format(self.x,self.y)
 
 class Coin(Base):
-    def __init__(self,x,y,size=8):
+    def __init__(self,x,y,size=8,coin=5):
         self.size = size
+        self.coin = coin
         super().__init__(x,y)
         self.width = 4*self.size
         self.height = 4*self.size
