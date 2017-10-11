@@ -27,7 +27,7 @@ class Player:
         self.screen_height = screen_height
         #jump
         self.jump_speed = JUMP_SPEED
-        self.mutiply_speed = 3/7
+        self.mutiply_speed = 1/2
         #is preseed key right or ledt
         self.isKeyRight = False
         self.isKeyLeft = False
@@ -90,8 +90,9 @@ class Player:
 
     def jump(self,amount=0):
         mutiply = 1
-        for i in range(amount):
+        if(amount > 0):
             mutiply *= self.mutiply_speed
+
         self.delta_y = JUMP_SPEED*mutiply
 
     def gravity(self):

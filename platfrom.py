@@ -12,7 +12,7 @@ class Base:
     Screen_Width = 0
     Sector = 1
     Sector_Width = 0
-    MOVE_SPEED = 7
+    MOVE_SPEED = 8
 
     @classmethod
     def Setup(cls,screen_width,screen_height,sector):
