@@ -25,6 +25,8 @@ class Window(arcade.Window):
         self.player_sprite.draw()
         for pf in self.world.list_of_platfrom:
             draw.Draw_Rectangle(pf).draw()
+        for c in self.world.list_of_coin:
+            draw.Draw_Circle(c).draw()
 
 
     def on_key_press(self,key,modifier):

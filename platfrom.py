@@ -20,7 +20,7 @@ class Base:
         cls.Screen_Height = screen_height
         cls.Sector = Sector
 
-    def __init__(self,x,y,width,height):
+    def __init__(self,x,y,width=None,height=None):
 
         self.x = x
         self.y = y
@@ -41,8 +41,6 @@ class Base:
     def __repr__(self):
         #Base(x,y)
         return 'Base({:.2f},{:.2f})'.format(self.x,self.y)
-
-
 
     def set_target(self):
         if(self.move > 0):
@@ -66,6 +64,10 @@ class Base:
                 #set nove_target to zero no more move
                 self.move_temp = 0
 
+    def is_out_of_edge(self):
+        if(self.y < 0):
+            return True
+        return False
 
     def update(self):
         #Trigger from world
@@ -79,3 +81,17 @@ class Normal(Base):
 
     def __repr__(self):
         return 'Normal({:.2f},{:.2f})'.format(self.x,self.y)
+
+class Coin(Base):
+    def __init__(self,x,y,size=8):
+        self.size = size
+        super().__init__(x,y)
+        self.width = 4*self.size
+        self.height = 4*self.size
+        self.color = color.WHEAT
+
+    def __repr__(self):
+        return 'Coin({:.2f},{:.2f})'.format(self.x,self.y)
+
+    def update(self):
+        super().update()
