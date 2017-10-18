@@ -11,7 +11,7 @@ class Create:
     Coin_Y_Offset = 20
     Color_List = [color.REDWOOD,color.FOREST_GREEN,color.FLAX,
                     color.WHITE_SMOKE,color.ALMOND,color.RUBY]
-    Move_Speed_List = [1.75,1.5,1,0.5,-0.5,-1,-1.5,-1.75]
+    Move_Speed_List = [1.5,1,0.5,-0.5,-1,-1.5]
 
     @staticmethod
     def random_spawn(drop_rate):
@@ -19,6 +19,23 @@ class Create:
         if(random < drop_rate):
             return True
         return False
+    @classmethod
+    def random_cloud(cls,width,height,side=''):
+        y = randint(height//2+cls.Edge_y,height+height//2-cls.Edge_y)
+        scale = choice([0.5,0.6,0.7,0.75,0.8,0.9,1,1.25])
+        if(side == 'left'):
+            x = -cls.Edge_x
+        elif(side == 'right'):
+            x = width+cls.Edge_x
+        else:
+            x = randint(cls.Edge_x,width)
+        return platfrom.Cloud(x,y,scale,side)
+
+    @classmethod
+    def generation_cloud(cls,width,height,amount,list_of_cloud):
+        for i in range(amount):
+            side = choice(['left','right'])
+            list_of_cloud.append(Create.random_cloud(width,height,side))
 
     @classmethod
     def random_platfrom(cls,x1,y1,x2,y2):
@@ -81,12 +98,15 @@ class World:
         self.setup()
         self.time = 0
         self.time_status = 0
+        self.time_cloud = 0
         self.list_of_platfrom = []
         self.list_of_coin = []
         Create.generation_platfrom(self.width,self.height,self.sector,self.list_of_platfrom,True,self.list_of_coin,World.Drop_Rate)
         self.player = Player(self.list_of_platfrom[0].x,self.list_of_platfrom[0].y+50,self.width,self.height)
 
-        self.test = platfrom.Cloud(200,200)
+        self.list_of_cloud = []
+        Create.generation_cloud(self.width,self.height,1,self.list_of_cloud)
+
 
     def __repr__(self):
         return '{}x{} sector:{}'.format(self.width,self.height,self.sector)
@@ -119,14 +139,26 @@ class World:
 
     def update(self,delta):
 
+        self.time_status += delta
+        self.time += delta
+        self.time_cloud += delta
+
+        if(len(self.list_of_cloud) < 5 and self.time_cloud > 2.5):
+            Create.generation_cloud(self.width,(3/4)*self.height,1,self.list_of_cloud)
+            self.time_cloud = 0
+
         if(self.list_of_platfrom[0].movement()):
             self.player.movement_w_platfrom()
+
+        for index,cl in enumerate(self.list_of_cloud):
+            cl.update()
+            if(cl.is_out_of_edge()):
+                del self.list_of_cloud[index]
 
         if(World.add_drop_rate()):
             print("[{:.2f}]----->Change:Drop_Rate {}".format(self.time,World.Drop_Rate))
 
-        self.time_status += delta
-        self.time += delta
+
         if(self.time_status > 3):
             print("Width: {} Height: {} Sector {}".format(self.width,self.height,self.sector))
             print("Platfrom: {} Coin: {}".format(len(self.list_of_platfrom),len(self.list_of_coin)))
@@ -169,6 +201,8 @@ class World:
 
                     print("[{:.2f}]----->Score +{}".format(self.time,index))
 
+                    for cl in self.list_of_cloud:
+                        cl.set_movement(index-1)
                     for pf in self.list_of_platfrom:
                         pf.set_movement(index-1)
                     for c in self.list_of_coin:

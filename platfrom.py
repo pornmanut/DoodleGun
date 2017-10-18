@@ -1,10 +1,11 @@
 from arcade import color
 from random import randint
+from random import choice
 
 COLOR = color.WHITE_SMOKE
 WIDTH = 90
 HEIGHT = 6
-
+EDGE = 50
 
 class Base:
 
@@ -115,14 +116,34 @@ class Coin(Base):
         super().update()
 
 class Cloud(Base):
-    def __init__(self,x,y):
+    def __init__(self,x,y,scale,side='right'):
         super().__init__(x,y)
-        self.size = 8
-        self.random_x1 = self.x-self.size-randint(5,15)
-        self.random_x2 = self.x+self.size+randint(5,15)
+        self.scale = scale
+        self.size = 8*self.scale
+        self.color = (255,255,255)
+        self.random_x1 = self.x-self.size-randint(int(5*self.scale),int(15*self.scale))
+        self.random_x2 = self.x+self.size+randint(int(5*self.scale),int(15*self.scale))
+        self.side = side
 
+        if(self.side == 'left'):
+            self.random_move = choice([0.25,0.5,1,1.5,2])
+        elif(self.side == 'right'):
+            self.random_move = -choice([0.25,0.5,1,1.5,2])
+        else:
+            self.random_move = 0
     def __repr__(self):
         return 'Cloud({:.2f},{:.2f})'.format(self.x,self.y)
+
+    def movement(self):
+        self.x += self.random_move
+        self.random_x1 += self.random_move
+        self.random_x2 += self.random_move
+        super().movement()
+
+    def is_out_of_edge(self):
+        if(self.side == 'left' and self.x > Base.Screen_Width+3*self.size) or (self.side == 'right' and self.x < -3*self.size) or (self.y < 0):
+            return True
+        return False
 
     def update(self):
         super().update()

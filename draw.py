@@ -40,9 +40,9 @@ class Draw_Rectangle:
         arcade.draw_rectangle_filled(self.model.x,self.model.y,
                                         self.model.width-10,self.model.height,
                                         self.model.color,self.model.angle)
-        arcade.draw_arc_filled(self.model.x-self.model.width//2+10,self.model.y
+        arcade.draw_arc_filled(self.model.x-self.model.width//2+8,self.model.y
                                 ,self.model.width//10,self.model.height//2
                                 ,self.model.color,90,270)
-        arcade.draw_arc_filled(self.model.x+self.model.width//2-10,self.model.y
+        arcade.draw_arc_filled(self.model.x+self.model.width//2-8,self.model.y
                                 ,self.model.width//10,self.model.height//2
                                 ,self.model.color,-90,90)
