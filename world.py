@@ -11,7 +11,7 @@ class Create:
     Coin_Y_Offset = 20
     Color_List = [color.REDWOOD,color.FOREST_GREEN,color.FLAX,
                     color.WHITE_SMOKE,color.ALMOND,color.RUBY]
-    Move_Speed_List = [2,1.5,1,0.5,-0.5,-1,-1.5,-2]
+    Move_Speed_List = [1.75,1.5,1,0.5,-0.5,-1,-1.5,-1.75]
 
     @staticmethod
     def random_spawn(drop_rate):
@@ -86,6 +86,7 @@ class World:
         Create.generation_platfrom(self.width,self.height,self.sector,self.list_of_platfrom,True,self.list_of_coin,World.Drop_Rate)
         self.player = Player(self.list_of_platfrom[0].x,self.list_of_platfrom[0].y+50,self.width,self.height)
 
+        self.test = platfrom.Cloud(200,200)
 
     def __repr__(self):
         return '{}x{} sector:{}'.format(self.width,self.height,self.sector)
@@ -117,6 +118,9 @@ class World:
         cls.MONEY += amount
 
     def update(self,delta):
+
+        if(self.list_of_platfrom[0].movement()):
+            self.player.movement_w_platfrom()
 
         if(World.add_drop_rate()):
             print("[{:.2f}]----->Change:Drop_Rate {}".format(self.time,World.Drop_Rate))
@@ -157,18 +161,18 @@ class World:
                 del self.list_of_platfrom[index]
 
             if(self.player.is_collisions(pf)):
-                self.player.jump(index)
+                self.player.jump()
 
                 print("[{:.2f}]----->Player Jump at {}".format(self.time,pf))
 
-                if(index != 0):
+                if(index > 1):
 
                     print("[{:.2f}]----->Score +{}".format(self.time,index))
 
                     for pf in self.list_of_platfrom:
-                        pf.set_movement(index)
+                        pf.set_movement(index-1)
                     for c in self.list_of_coin:
-                        c.set_movement(index)
+                        c.set_movement(index-1)
 
-                    Create.platfrom_system(self.width,self.height,self.sector,index,self.list_of_platfrom,True,self.list_of_coin,World.Drop_Rate)
+                    Create.platfrom_system(self.width,self.height,self.sector,index-1,self.list_of_platfrom,True,self.list_of_coin,World.Drop_Rate)
                     World.add_score(index)

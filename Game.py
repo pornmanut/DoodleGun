@@ -39,6 +39,8 @@ class Window(arcade.Window):
         #see player 1
         self.player_sprite.draw()
 
+        draw.Draw_Cloud(self.world.test).draw()
+
 
     def on_key_press(self,key,modifier):
         self.world.on_key_press(key,modifier)

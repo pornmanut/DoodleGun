@@ -1,4 +1,5 @@
 from arcade import color
+from random import randint
 
 COLOR = color.WHITE_SMOKE
 WIDTH = 90
@@ -46,10 +47,13 @@ class Base:
             if(self.move_target-Base.MOVE_SPEED >= 0):
                 self.y -= Base.MOVE_SPEED
                 self.move_target -= Base.MOVE_SPEED
+                return True
             else:
                 self.y -= self.move_target
                 self.move_target = 0
                 self.move = 0
+                return False
+        return False
 
     def is_out_of_edge(self):
         if(self.y < 0):
@@ -106,6 +110,19 @@ class Coin(Base):
 
     def __repr__(self):
         return 'Coin({:.2f},{:.2f})'.format(self.x,self.y)
+
+    def update(self):
+        super().update()
+
+class Cloud(Base):
+    def __init__(self,x,y):
+        super().__init__(x,y)
+        self.size = 8
+        self.random_x1 = self.x-self.size-randint(5,15)
+        self.random_x2 = self.x+self.size+randint(5,15)
+
+    def __repr__(self):
+        return 'Cloud({:.2f},{:.2f})'.format(self.x,self.y)
 
     def update(self):
         super().update()
