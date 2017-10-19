@@ -35,7 +35,7 @@ class Create:
     @classmethod
     def generation_cloud(cls,width,height,amount,list_of_cloud):
         for i in range(amount):
-            side = choice(['left','right',''])
+            side = choice(['left','right','left','right',''])
             list_of_cloud.append(Create.random_cloud(width,height,side))
 
     @classmethod
@@ -93,6 +93,7 @@ class World:
 
     def __init__(self,width,height):
         #setup
+        self.pause = False
         self.width = width
         self.height = height
         self.sector = ((2*height)//80)-(2*height)//1000
@@ -140,6 +141,16 @@ class World:
 
     def update(self,delta):
 
+
+        if(self.pause):
+            return
+
+        self.pause = self.player.out_of_edge()
+
+        if(self.pause):
+            print("[{:.2f}]----->You lose Score: {}".format(self.time,World.SCORE))
+            return
+
         self.time_status += delta
         self.time += delta
         self.time_cloud += delta
@@ -165,6 +176,7 @@ class World:
             print("Platfrom: {} Coin: {}".format(len(self.list_of_platfrom),len(self.list_of_coin)))
             print("Score: {} Money: {}".format(World.SCORE,World.MONEY))
             self.time_status = 0
+
         self.player.update()
 
         for index,c in enumerate(self.list_of_coin):
