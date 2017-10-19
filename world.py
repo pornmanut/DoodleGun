@@ -29,12 +29,13 @@ class Create:
             x = width+cls.Edge_x
         else:
             x = randint(cls.Edge_x,width)
+            y = randint(height+height//4+cls.Edge_y,height+height//2+cls.Edge_y)
         return platfrom.Cloud(x,y,scale,side)
 
     @classmethod
     def generation_cloud(cls,width,height,amount,list_of_cloud):
         for i in range(amount):
-            side = choice(['left','right'])
+            side = choice(['left','right',''])
             list_of_cloud.append(Create.random_cloud(width,height,side))
 
     @classmethod
@@ -143,7 +144,7 @@ class World:
         self.time += delta
         self.time_cloud += delta
 
-        if(len(self.list_of_cloud) < 5 and self.time_cloud > 2.5):
+        if(len(self.list_of_cloud) < 8 and self.time_cloud > 2):
             Create.generation_cloud(self.width,(3/4)*self.height,1,self.list_of_cloud)
             self.time_cloud = 0
 
