@@ -199,7 +199,7 @@ class World:
         self.player.update()
 
         for index,c in enumerate(self.list_of_coin):
-            c.update()
+            c.update(delta)
             if(self.player.is_collisions(c,check_y=False)):
                 print("[{:.2f}]----->Got: Coin {}".format(self.time,self.list_of_coin[index]))
 

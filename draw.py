@@ -31,6 +31,7 @@ class Draw_Circle:
         arcade.draw_circle_filled(self.model.x,self.model.y,
                                     self.model.size,self.model.color)
 
+
 class Draw_Player(Draw_Circle):
     def __init__(self,model):
         super().__init__(model)

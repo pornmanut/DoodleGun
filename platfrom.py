@@ -109,11 +109,24 @@ class Coin(Base):
         self.height = 4*self.size
         self.color = color.WHEAT
 
+        self.move_speed = 0.5
+        self.time = 0
+        self.time_change = 0.2
+
+    def sign_move(self):
+        if(self.time > self.time_change):
+            self.move_speed *= -1
+            self.time = 0
+        self.y += self.move_speed
+
     def __repr__(self):
         return 'Coin({:.2f},{:.2f})'.format(self.x,self.y)
 
-    def update(self):
+    def update(self,delta):
         super().update()
+        self.time += delta
+        self.sign_move()
+
 
 class Cloud(Base):
     def __init__(self,x,y,scale,side='right'):
