@@ -3,7 +3,7 @@ from random import randint
 from random import choice
 
 COLOR = color.WHITE_SMOKE
-WIDTH = 90
+WIDTH = 96
 HEIGHT = 6
 EDGE = 50
 

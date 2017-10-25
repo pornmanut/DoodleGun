@@ -2,6 +2,7 @@ from player import Player
 from random import choice
 from random import randint
 from arcade import color
+import arcade
 
 import platfrom
 
@@ -89,25 +90,37 @@ class World:
     MONEY = 0
     Drop_Rate = 10
     MAX_DROP_RATE = 80
-    Drop_Rate_Change = 50
+    Drop_Rate_Change = 80
 
     def __init__(self,width,height):
-        #setup
-        self.pause = False
+
         self.width = width
         self.height = height
         self.sector = ((2*height)//80)-(2*height)//1000
+        platfrom.Base.Setup(self.width,self.height,self.sector)
         self.setup()
+
+    @classmethod
+    def setscore(cls):
+        cls.SCORE = 0
+        cls.MONEY = 0
+        cls.Drop_Rate = 10
+
+    def setup(self):
+
+        self.pause = False
         self.time = 0
         self.time_status = 0
         self.time_cloud = 0
+        self.restart = False
+
         self.list_of_platfrom = []
         self.list_of_coin = []
-        Create.generation_platfrom(self.width,self.height,self.sector,self.list_of_platfrom,True,self.list_of_coin,World.Drop_Rate)
-        self.player = Player(self.list_of_platfrom[0].x,self.list_of_platfrom[0].y+50,self.width,self.height)
-
         self.list_of_cloud = []
+
+        Create.generation_platfrom(self.width,self.height,self.sector,self.list_of_platfrom,True,self.list_of_coin,World.Drop_Rate)
         Create.generation_cloud(self.width,self.height,1,self.list_of_cloud)
+        self.player = Player(self.list_of_platfrom[0].x,self.list_of_platfrom[0].y+50,self.width,self.height)
 
 
     def __repr__(self):
@@ -122,12 +135,12 @@ class World:
         return False
 
 
-    def setup(self):
-        platfrom.Base.Setup(self.width,self.height,self.sector)
-
-
     def on_key_press(self,key,modifier):
         self.player.on_key_press(key,modifier)
+        if(self.pause and key == arcade.key.SPACE):
+            self.pause = False
+            self.restart = True
+
 
     def on_key_release(self,key,modifier):
         self.player.on_key_release(key,modifier)
@@ -143,6 +156,12 @@ class World:
 
 
         if(self.pause):
+            return
+
+        if(self.restart):
+            self.setup()
+            self.setscore()
+            print("[{:.2f}]----->Game Restart".format(self.time))
             return
 
         self.pause = self.player.out_of_edge()

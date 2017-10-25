@@ -3,7 +3,8 @@ import arcade.key
 
 MOVEMENT_SPEED = 6
 CIRCLE_RADIUS = 12
-CIRCLE_COLOR = color.ALICE_BLUE
+CIRCLE_COLOR = color.WHEAT
+COLOR = (134,1,17,200)
 JUMP_SPEED = 8
 
 GRAVITY = 0.3
@@ -22,6 +23,7 @@ class Player:
         self.size = CIRCLE_RADIUS
         #color of player
         self.color = CIRCLE_COLOR
+        self.color_2 = COLOR
         #screen width,height
         self.screen_width = screen_width
         self.screen_height = screen_height
